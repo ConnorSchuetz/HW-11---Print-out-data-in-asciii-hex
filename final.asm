@@ -47,19 +47,19 @@ print:
         mov eax, 4              ;sys_write
         mov ebx, 1              ;stdout
         mov ecx, outputBuf      ;adress of the output
-        mov edx, edx            ;num of bytes
         int 0x80
 	
 	mov eax, 1		;system exit
+	mov ebx, 0
 	int 0x80
 	
 convert:
 	cmp al, 9
-	jbe .dig		;if the num < 9 its a digit convert
+	jbe dig		;if the num < 9 its a digit convert
 	add al, 55 		;By adding 55 we change 10 to 65 which is ASCII for A
 	ret			;returns
 
-.dig:
+dig:
 	add al, 48 		; 0 = ASCII 48 which will leave just the ASCII number
 	ret 			;returns
 	
