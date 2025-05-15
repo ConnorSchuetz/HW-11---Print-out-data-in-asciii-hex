@@ -15,16 +15,16 @@ section .text
 _start:
 
 next_Num:
-        cmp ebx, [inputNum]       ;Checks if we have compared all numbers
+        cmp ebx, [inputNum]       ;Checks if we have converted all bytes
         jge newline                 ;Jumps to end when done with all nums
 
-        mov al, [inputBuf + ebx]
-        mov ah, al           ;Copies the byte
+        mov al, [inputBuf + ebx]    ;Grabs whatever the next byte is using ebx register to keep track 
+        mov ah, al           ;Copies the byte ah register will be used for referance
 
-        shr al, 4              ;Shifts right 4
+        shr al, 4              ;Shifts right 4 leaving only bits 8 - 5
         call convert            ;Call to convert bits 8 - 5
         mov [outputBuf + edx], al  ; Puts the converted byte on the output
-        inc edx                      ;edx needs to be incremented
+        inc edx                      ;edx needs to be incremented it keeps track of where to add next character
 
         mov al, ah           ;Resets the byte to original state
         and al, 0x0F           ;Masks 8 - 5 bits to only 4 - 1 remain
@@ -37,7 +37,7 @@ next_Num:
         jge next_Num             ;Won't add space if last num
         mov byte [outputBuf + edx], ' ' ;Adds space to output
         inc edx                         ;increment to account for space
-        jmp next_Num                    ;Loop restarts
+        jmp next_Num                    ;Moves on to next byte
 
 newline:
         mov byte [outputBuf + edx], 10 ;10 = newline in ASCII
@@ -56,10 +56,10 @@ print:
 convert:
 	cmp al, 9
 	jbe .dig		;if the num < 9 its a digit convert
-	add al, 55 		;Offsets the digit
+	add al, 55 		;By adding 55 we change 10 to 65 which is ASCII for A
 	ret			;returns
 
 .dig:
-	add al, 48 		; 0 = ASCII 48
+	add al, 48 		; 0 = ASCII 48 which will leave just the ASCII number
 	ret 			;returns
 	
